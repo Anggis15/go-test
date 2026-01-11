@@ -1,0 +1,111 @@
+basePath: /
+definitions:
+  model.QuizResult:
+    properties:
+      final_score:
+        type: number
+      status:
+        type: string
+    type: object
+  model.StartQuizRequest:
+    properties:
+      quiz_id:
+        type: integer
+    type: object
+  model.SubmitAnswerRequest:
+    properties:
+      answer_text:
+        type: string
+      attempt_id:
+        type: integer
+      question_id:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API untuk sistem quiz online
+  title: Quiz Service API
+  version: "1.0"
+paths:
+  /quiz/result:
+    get:
+      description: Melihat hasil akhir quiz
+      parameters:
+      - description: Attempt ID
+        in: query
+        name: attempt_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.QuizResult'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get quiz result
+      tags:
+      - Quiz
+  /quiz/start:
+    post:
+      consumes:
+      - application/json
+      description: Memulai quiz dan mengembalikan soal
+      parameters:
+      - description: Start Quiz
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.StartQuizRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Start quiz
+      tags:
+      - Quiz
+  /quiz/submit:
+    post:
+      consumes:
+      - application/json
+      description: Autosave jawaban per soal
+      parameters:
+      - description: Submit Answer
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/model.SubmitAnswerRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Submit answer
+      tags:
+      - Quiz
+swagger: "2.0"
